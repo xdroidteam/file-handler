@@ -11,6 +11,7 @@ class CreateFilesTable extends Migration {
 			$table->increments('id');
 			$table->string('path');
 			$table->string('filename');
+			$table->integer('multiple_id')->unsigned()->nullable();
 			$table->string('extension');
 			$table->string('original_filename');
 			$table->timestamps();
