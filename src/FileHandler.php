@@ -1,7 +1,7 @@
 <?php namespace XdroidTeam\FileHandler;
 
 use File,
-    App\Models\File as FileModel;
+    XdroidTeam\FileHandler\File as FileModel;
 
 class FileHandler{
 
