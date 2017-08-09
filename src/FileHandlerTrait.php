@@ -35,11 +35,11 @@ trait FileHandlerTrait{
         $fileHandler->saveFile($file);
     }
 
-    public function duplicateGivenFile($types, $newID){
-        foreach (FileHandler::getMultipleTypesFileModels(static::$fileGroup, $types, $this->id) as $file) {
+    public function duplicateGivenFile($types, $newID, $newFileGroup = false){
+        foreach (FileHandler::getMultipleTypesFileModels($newFileGroup ?: static::$fileGroup, $types, $this->id) as $file) {
             $type = FileHandler::getTypeFromModel($file);
 
-            $fileHandler = new FileHandler(static::$fileGroup, $type, $newID);
+            $fileHandler = new FileHandler($newFileGroup ?: static::$fileGroup, $type, $newID);
             $fileHandler->duplicate($file);
         }
     }
