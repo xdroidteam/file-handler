@@ -40,7 +40,7 @@ trait FileHandlerTrait{
     }
 
     public function duplicateGivenFile($types, $newID, $newFileGroup = false){
-        foreach (FileHandler::getMultipleTypesFileModels($newFileGroup ?: static::$fileGroup, $types, $this->id) as $file) {
+        foreach (FileHandler::getMultipleTypesFileModels(static::$fileGroup, $types, $this->id) as $file) {
             $type = FileHandler::getTypeFromModel($file);
 
             $fileHandler = new FileHandler($newFileGroup ?: static::$fileGroup, $type, $newID);
