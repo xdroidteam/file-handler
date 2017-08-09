@@ -163,6 +163,13 @@ class FileHandler{
     }
 
     public static function deleteAllFilesByType($group, $types, $id){
+        $fileHandler = static::deleteFilesByType($group, $types, $id);
+        
+        if ($fileHandler)
+            rmdir($fileHandler->getPath());
+    }
+
+    public static function deleteFilesByType($group, $types, $id){
         $fileHandler = false;
         foreach (static::getMultipleTypesFileModels($group, $types, $id) as $file) {
             $type = static::getTypeFromModel($file);
@@ -171,8 +178,8 @@ class FileHandler{
             $fileHandler->setMultipleID($file->multiple_id);
             $fileHandler->delete();
         }
-        if ($fileHandler)
-            rmdir($fileHandler->getPath());
+
+        return $fileHandler;
     }
 
 

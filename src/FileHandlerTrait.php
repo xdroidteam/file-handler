@@ -30,6 +30,10 @@ trait FileHandlerTrait{
         FileHandler::deleteAllFilesByType(static::$fileGroup, static::$fileTypes, $this->id);
     }
 
+    public function deleteFilesByType($types){
+        FileHandler::deleteFilesByType(static::$fileGroup, $types, $this->id);
+    }
+
     public function saveFile($file, $type){
         $fileHandler = new FileHandler(static::$fileGroup, $type, $this->id);
         $fileHandler->saveFile($file);
