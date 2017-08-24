@@ -1,6 +1,7 @@
 <?php namespace XdroidTeam\FileHandler;
 
 use File,
+    Storage,
     XdroidTeam\FileHandler\File as FileModel;
 
 class FileHandler{
@@ -51,6 +52,19 @@ class FileHandler{
         $file->save();
 
         $inputFile->move($this->getPath(), $this->getFileName() . '.' . $extension);
+    }
+
+    public function saveFileFromStream($inputStream, $originalName, $extension){
+        if (!File::isDirectory($path = $this->getPath()))
+            makeDirectory($path);
+
+        $file = $this->getNewFileModel();
+
+        $file->extension = $extension;
+        $file->original_filename = $originalName;
+        $file->save();
+
+        Storage::disk('server_root')->getDriver()->putStream($this->getPath() . $this->getFileName() . '.' . $extension, $inputStream);
     }
 
     public function duplicate($oldFile){
@@ -164,7 +178,7 @@ class FileHandler{
 
     public static function deleteAllFilesByType($group, $types, $id){
         $fileHandler = static::deleteFilesByType($group, $types, $id);
-        
+
         if ($fileHandler)
             rmdir($fileHandler->getPath());
     }
