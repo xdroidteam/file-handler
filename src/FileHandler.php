@@ -40,7 +40,7 @@ class FileHandler{
 
     public function saveFile($inputFile){
         if (!File::isDirectory($path = $this->getPath()))
-            makeDirectory($path);
+            static::makeDirectory($path);
 
         $extension = $inputFile->getClientOriginalExtension();
         $originalName = $inputFile->getClientOriginalName();
@@ -56,7 +56,7 @@ class FileHandler{
 
     public function saveFileFromStream($inputStream, $originalName, $extension){
         if (!File::isDirectory($path = $this->getPath()))
-            makeDirectory($path);
+            static::makeDirectory($path);
 
         $file = $this->getNewFileModel();
 
@@ -69,7 +69,7 @@ class FileHandler{
 
     public function duplicate($oldFile){
         if (!File::isDirectory($path = $this->getPath()))
-            makeDirectory($path);
+            static::makeDirectory($path);
 
         $extension = $oldFile->extension;
         $originalName = $oldFile->original_filename;
@@ -174,6 +174,14 @@ class FileHandler{
         }
 
         return $fileList;
+    }
+
+    public static function makeDirectory($directory){
+        if (File::isDirectory($directory))
+            return 0;
+        $oldmask = umask(0);
+        mkdir( $directory , 0777, true );
+        umask($oldmask);
     }
 
     public static function deleteAllFilesByType($group, $types, $id){
