@@ -54,6 +54,23 @@ class FileHandler{
         $inputFile->move($this->getPath(), $this->getFileName() . '.' . $extension);
     }
 
+    public function saveFileByContent($content, $originalName, $originalExtension, $isMultiple){
+        if($isMultiple){
+            $this->multipleID = $this->getMaxMultipleID() + 1;
+        }
+
+        if (!File::isDirectory($path = $this->getPath()))
+            static::makeDirectory($path);
+
+        $file = $this->getNewFileModel();
+        
+        $file->extension = $originalExtension;
+        $file->original_filename = $originalName;
+        $file->save();
+
+        File::put($this->getPath() . $this->getFileName() . '.' . $originalExtension, $content);
+    }
+
     public function saveFileFromStream($inputStream, $originalName, $extension){
         if (!File::isDirectory($path = $this->getPath()))
             static::makeDirectory($path);

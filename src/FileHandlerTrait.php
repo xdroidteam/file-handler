@@ -39,6 +39,12 @@ trait FileHandlerTrait{
         $fileHandler->saveFile($file);
     }
 
+    public function saveFileByContent($type, $content, $originalName, $originalExtension, $isMultiple = true){
+        $fileHandler = new FileHandler(static::$fileGroup, $type, $this->id);
+
+        $fileHandler->saveFileByContent($content, $originalName, $originalExtension, $isMultiple);
+    }
+
     public function duplicateGivenFile($types, $newID, $newFileGroup = false){
         foreach (FileHandler::getMultipleTypesFileModels(static::$fileGroup, $types, $this->id) as $file) {
             $type = FileHandler::getTypeFromModel($file);
