@@ -34,9 +34,9 @@ trait FileHandlerTrait{
         FileHandler::deleteFilesByType(static::$fileGroup, $types, $this->id);
     }
 
-    public function saveFile($file, $type){
+    public function saveFile($file, $type, $slug = false){
         $fileHandler = new FileHandler(static::$fileGroup, $type, $this->id);
-        $fileHandler->saveFile($file);
+        $fileHandler->saveFile($file, $slug);
     }
 
     public function saveFileByContent($type, $content, $originalName, $originalExtension, $isMultiple = true){

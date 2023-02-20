@@ -16,7 +16,14 @@ class FileHandler{
     public function __construct($group, $type, $id){
         $this->group = $group;
         $this->type = $type;
-        $this->id = $id;
+        if(is_numeric($id)){
+            $this->id = $id;
+        } else {
+            $fileModel = FileModel::where('slug', '=', $id)->first();
+            if($fileModel){
+                $this->id = explode('_', $fileModel->filename)[0];
+            }
+        }
     }
 
 
@@ -38,7 +45,7 @@ class FileHandler{
         return $fileName;
     }
 
-    public function saveFile($inputFile){
+    public function saveFile($inputFile, $slug = false){
         if (!File::isDirectory($path = $this->getPath()))
             static::makeDirectory($path);
 
@@ -49,6 +56,9 @@ class FileHandler{
 
         $file->extension = $extension;
         $file->original_filename = $originalName;
+        if($slug !== false){
+            $file->slug = $slug;
+        }
         $file->save();
 
         $inputFile->move($this->getPath(), $this->getFileName() . '.' . $extension);
@@ -126,7 +136,6 @@ class FileHandler{
 
     public function downloadFile(){
         $file = $this->getExistingFileModel();
-
         if (!$file)
             return response('File not found.', 404);
 
@@ -184,8 +193,13 @@ class FileHandler{
 
         foreach (static::getMultipleTypesFileModels($group, $types, $id) as $file) {
             $type = static::getTypeFromModel($file);
+            if($file->slug){
+                $url = $group . '/' . $type . '/' . $file->slug;
+            } else {
+                $url = $group . '/' . $type . '/' . $id . '/' . $file->multiple_id;
+            }
             $fileList[$type][] =  [
-                'url' => $group . '/' . $type . '/' . $id . '/' . $file->multiple_id,
+                'url' => $url,
                 'filename' => $file->original_filename,
             ];
         }
